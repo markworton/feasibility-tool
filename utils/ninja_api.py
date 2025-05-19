@@ -22,16 +22,17 @@ def get_ninja_data(lat, lon, tech="solar", year=2021):
     }
 
     params = {
-        "lat": lat,
-        "lon": lon,
-        "date_from": f"{year}-01-01",
-        "date_to": f"{year}-12-31",
-        "format": "json",
-        "header": True,
-        "tz": "Europe/London",
-        "capacity": 1,
-        "system_loss": 0.1
-    }
+    "lat": lat,
+    "lon": lon,
+    "date_from": f"{year}-01-01",
+    "date_to": f"{year}-12-31",
+    "format": "json",
+    "header": True,
+    "tz": "Europe/London",
+    "capacity": 1,
+    "system_loss": 0.1,
+    "model": "pv" if tech == "solar" else "merra2"
+}
 
     if tech == "wind":
         params["height"] = 100
