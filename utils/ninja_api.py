@@ -10,15 +10,9 @@ def get_ninja_data(lat, lon, tech="solar", year=2021):
         "Authorization": f"Token {RENEWABLES_NINJA_API_KEY}"
     }
 
-    # Determine model based on technology
-    if tech == "solar":
-        model = "pv"
-    elif tech == "wind":
-        model = "merra2"
-    else:
-        raise ValueError("Unknown technology type. Use 'solar' or 'wind'.")
+    # Required model for each tech
+    model = "pv" if tech == "solar" else "merra2"
 
-    # Assemble request parameters
     params = {
         "lat": lat,
         "lon": lon,
@@ -29,16 +23,16 @@ def get_ninja_data(lat, lon, tech="solar", year=2021):
         "tz": "Europe/London",
         "capacity": 1,
         "system_loss": 0.1,
-        "model": model
+        "model": model  # THIS IS THE CRITICAL LINE
     }
 
-    # For wind only: add height
+    # Optional: add height for wind
     if tech == "wind":
         params["height"] = 100
 
     response = requests.get(base_url, headers=headers, params=params)
 
-    if response.status_code == 200:
-        return response.json()
-    else:
+    if response.status_code != 200:
         raise Exception(f"API Error {response.status_code}: {response.text}")
+    
+    return response.json()
